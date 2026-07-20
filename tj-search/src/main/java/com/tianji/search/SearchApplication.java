@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
+//课程推荐服务
 @MapperScan("com.tianji.search.mapper")
 @SpringBootApplication
 @EnableScheduling

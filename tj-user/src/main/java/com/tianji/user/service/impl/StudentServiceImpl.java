@@ -2,13 +2,20 @@ package com.tianji.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tianji.api.client.trade.TradeClient;
+import com.tianji.api.dto.user.UserDTO;
 import com.tianji.common.domain.dto.PageDTO;
 import com.tianji.common.enums.UserType;
+import com.tianji.common.exceptions.BadRequestException;
+import com.tianji.common.exceptions.BizIllegalException;
+import com.tianji.common.exceptions.UnauthorizedException;
 import com.tianji.common.utils.BeanUtils;
 import com.tianji.common.utils.CollUtils;
 import com.tianji.common.utils.RandomUtils;
+import com.tianji.common.utils.UserContext;
 import com.tianji.user.constants.UserConstants;
 import com.tianji.user.domain.dto.StudentFormDTO;
+import com.tianji.user.domain.dto.StudentUpdateDTO;
+import com.tianji.user.domain.dto.StudentUpdatePasswordDTO;
 import com.tianji.user.domain.po.User;
 import com.tianji.user.domain.po.UserDetail;
 import com.tianji.user.domain.query.UserPageQuery;
@@ -17,6 +24,7 @@ import com.tianji.user.service.IStudentService;
 import com.tianji.user.service.IUserDetailService;
 import com.tianji.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +48,7 @@ public class StudentServiceImpl implements IStudentService {
     private final IUserService userService;
     private final IUserDetailService detailService;
     private final TradeClient tradeClient;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -88,4 +97,35 @@ public class StudentServiceImpl implements IStudentService {
         }
         return new PageDTO<>(page.getTotal(), page.getPages(), list);
     }
+
+    @Override
+    public void updateStudent(StudentUpdateDTO studentUpdateDTO) {
+//        Long currentUserId = UserContext.getUser();
+//        if (currentUserId == null) {
+//            throw new UnauthorizedException("未登录或登录已过期");
+//        }
+//        studentUpdateDTO.setId(currentUserId);
+//        if (studentUpdateDTO.getId() == null) {
+//            throw new BadRequestException("用户ID不能为空");
+//        }
+        if(!studentUpdateDTO.getId().equals(UserContext.getUser())){
+            throw new BizIllegalException("只能修改自己的信息！");
+        }
+        UserDTO dto = BeanUtils.copyProperties(studentUpdateDTO, UserDTO.class);
+        userService.updateUser(dto);
+    }
+
+    @Override
+    public void updatePassword(StudentUpdatePasswordDTO dto) {
+        if(!dto.getId().equals(UserContext.getUser())){
+            throw new BizIllegalException("只能修改自己的信息！");
+        }
+        User user = userService.getById(dto.getId());
+        if(!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())){
+            throw new BizIllegalException("原密码错误！");
+        }
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userService.updateById(user);
+    }
+
 }
