@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.88.106:8848
+        namespace: f923fb34-cb0a-4c06-8fca-ad61ea61a3f0
+      config:
+        server-addr: 192.168.88.106:8848
+        namespace: f923fb34-cb0a-4c06-8fca-ad61ea61a3f0
+
+logging:
+  level:
+    com.tianji.notification: debug

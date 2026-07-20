@@ -1,0 +1,51 @@
+server:
+  port: 8095
+
+spring:
+  application:
+    name: notification-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: 192.168.88.106:8848
+        namespace: f923fb34-cb0a-4c06-8fca-ad61ea61a3f0
+        shared-configs:
+          - data-id: shared-spring.yaml
+            refresh: true
+          - data-id: shared-redis.yaml
+            refresh: true
+          - data-id: shared-mybatis.yaml
+            refresh: true
+          - data-id: shared-logs.yaml
+            refresh: true
+          - data-id: shared-feign.yaml
+            refresh: true
+          - data-id: shared-mq.yaml
+            refresh: true
+
+# Swagger 文档
+tj:
+  swagger:
+    enable: true
+    title: "天机学堂 - 通知中心接口文档"
+    description: "实时消息推送 + 多渠道通知"
+    basePackage: com.tianji.notification.controller
+    enableResponseWrap: true
+  jdbc:
+    database: tj_notification
+  auth:
+    resource:
+      enable: true
+      includeLoginPaths:
+        - /notifications/**
+        - /notifications-admin/**
+      excludeLoginPaths:
+        - /notifications/send
+        - /notifications/send-async
+  notification:
+    heartbeat-interval: 30
+    history-retention-days: 90
+    max-push-queue-per-user: 100
+    batch-push-rate-limit: 50
