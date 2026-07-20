@@ -25,4 +25,19 @@ public class UserContext {
     public static void removeUser(){
         TL.remove();
     }
+    // ✅ 支持 try-with-resources
+    public static UserScope withUser(Long userId) {
+        TL.set(userId);
+        return () -> TL.remove();
+    }
+
+    public interface UserScope extends AutoCloseable {
+        @Override void close();
+    }
+    /**
+     * 在 Gateway Filter 或拦截器中强制清理（兜底机制）
+     */
+    public static void clear() {
+        TL.remove();
+    }
 }

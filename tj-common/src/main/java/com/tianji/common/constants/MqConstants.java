@@ -21,12 +21,10 @@ public interface MqConstants {
         String PAY_EXCHANGE = "pay.topic";
         /*交易服务延迟任务交换机*/
         String TRADE_DELAY_EXCHANGE = "trade.delay.topic";
-
+        /*促销服务的交换机*/
+        String PROMOTION_EXCHANGE ="promotion.topic";
          /*点赞记录有关的交换机*/
         String LIKE_RECORD_EXCHANGE = "like.record.topic";
-
-        /*优惠促销有关的交换机*/
-        String PROMOTION_EXCHANGE = "promotion.topic";
     }
     interface Queue {
         String ERROR_QUEUE_TEMPLATE = "error.{}.queue";
@@ -38,6 +36,7 @@ public interface MqConstants {
         String COURSE_DOWN_KEY = "course.down";
         String COURSE_EXPIRE_KEY = "course.expire";
         String COURSE_DELETE_KEY = "course.delete";
+        String COURSE_COMMENT_KEY = "course.comment";
 
         /*订单有关的RoutingKey*/
         String ORDER_PAY_KEY = "order.pay";
@@ -61,10 +60,14 @@ public interface MqConstants {
         String QA_LIKED_TIMES_KEY = "QA.times.changed";
         /*笔记*/
         String NOTE_LIKED_TIMES_KEY = "NOTE.times.changed";
-
+        /* 评价课程 */
+        String COURSE_COMMENT = "course.comment";
+        //领取优惠券的key
+        String COUPON_RECEIVE ="coupon.receive";
         /*短信系统发送短信*/
         String SMS_MESSAGE = "sms.message";
-
+        /*促销服务的交换机*/
+        String PROMOTION_EXCHANGE ="promotion.topic";
         /*异常RoutingKey的前缀*/
         String ERROR_KEY_PREFIX = "error.";
         String DEFAULT_ERROR_KEY = "error.#";
@@ -75,7 +78,5 @@ public interface MqConstants {
 
         String ORDER_DELAY_KEY = "delay.order.query";
 
-        /*领取优惠券的key*/
-        String COUPON_RECEIVE = "coupon.receive";
     }
 }

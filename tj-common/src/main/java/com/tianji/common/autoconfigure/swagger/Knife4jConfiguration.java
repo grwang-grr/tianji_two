@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.util.StringUtils;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -29,6 +30,12 @@ public class Knife4jConfiguration {
 
     @Bean(value = "defaultApi2")
     public Docket defaultApi2(TypeResolver typeResolver) {
+        // 新增空值兜底逻辑
+        String scanPackage = swaggerConfigProperties.getPackagePath();
+        // 为空/空白字符则赋值全局根包，避免null传入basePackage
+        if (!StringUtils.hasText(scanPackage)) {
+            scanPackage = "com.tianji";
+        }
         // 1.初始化Docket
         Docket docket = new Docket(DocumentationType.SWAGGER_2);
         // 2.是否需要包装R
@@ -46,7 +53,7 @@ public class Knife4jConfiguration {
                 .build())
                 .select()
                 //这里指定Controller扫描包路径
-                .apis(RequestHandlerSelectors.basePackage(swaggerConfigProperties.getPackagePath()))
+                .apis(RequestHandlerSelectors.basePackage(scanPackage))
                 .paths(PathSelectors.any())
                 .build();
 
