@@ -8,23 +8,25 @@
     <artifactId>tjxt</artifactId>
     <version>1.0.0</version>
     <modules>
-        <module>tj-common</module>
-        <module>tj-auth</module>
+
         <module>tj-api</module>
-        <module>tj-gateway</module>
-        <module>tj-user</module>
-        <module>tj-message</module>
-        <module>tj-media</module>
+        <module>tj-auth</module>
+        <module>tj-certificate</module>
+        <module>tj-common</module>
         <module>tj-course</module>
-        <module>tj-search</module>
-        <module>tj-learning</module>
-        <module>tj-pay</module>
-        <module>tj-trade</module>
-        <module>tj-exam</module>
-        <module>tj-promotion</module>
         <module>tj-data</module>
-        <module>tj-remark</module>
+        <module>tj-exam</module>
+        <module>tj-gateway</module>
+        <module>tj-learning</module>
+        <module>tj-media</module>
+        <module>tj-message</module>
+        <module>tj-notification</module>
+        <module>tj-pay</module>
         <module>tj-promotion</module>
+        <module>tj-remark</module>
+        <module>tj-search</module>
+        <module>tj-trade</module>
+        <module>tj-user</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -45,21 +47,22 @@
         <org.projectlombok.version>1.18.20</org.projectlombok.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
-        <mybatis-plus.version>3.4.3</mybatis-plus.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <hutool.version>5.7.17</hutool.version>
         <swagger.version>3.0.3</swagger.version>
         <mysql.version>8.0.23</mysql.version>
         <ali.sdk.core.version>4.6.0</ali.sdk.core.version>
         <ali.sdk.kms.version>2.10.1</ali.sdk.kms.version>
         <ali.sdk.oss.version>3.10.2</ali.sdk.oss.version>
-        <ali.sdk.pay.version>4.33.12.ALL</ali.sdk.pay.version>
+        <ali.sdk.pay.version>4.39.282.ALL</ali.sdk.pay.version>
         <tencent.cloud.version>3.1.515</tencent.cloud.version>
         <redisson.version>3.13.6</redisson.version>
         <elasticsearch.version>7.12.1</elasticsearch.version>
         <tencent.sdk.cos.version>5.6.89</tencent.sdk.cos.version>
         <tencent.sdk.vod.version>2.1.5</tencent.sdk.vod.version>
         <xxl-job-version>2.3.1</xxl-job-version>
-        <seata-version>1.5.1</seata-version>
+        <seata-version>1.7.1</seata-version>
+        <spring-ai.version>1.0.0-SNAPSHOT</spring-ai.version>
     </properties>
     <!-- 对依赖包进行管理 -->
     <dependencyManagement>
@@ -78,6 +81,13 @@
                 <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+                <exclusions>
+                    <!-- 排除内置旧seata包 -->
+                    <exclusion>
+                        <groupId>io.seata</groupId>
+                        <artifactId>seata-spring-boot-starter</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- 数据库驱动包管理 -->
             <dependency>
@@ -115,11 +125,13 @@
                 <artifactId>aliyun-java-sdk-kms</artifactId>
                 <version>${ali.sdk.kms.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.alipay.sdk</groupId>
-                <artifactId>alipay-sdk-java</artifactId>
-                <version>${ali.sdk.pay.version}</version>
-            </dependency>
+<!--            &lt;!&ndash; Source: https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>com.alipay.sdk</groupId>-->
+<!--                <artifactId>alipay-sdk-java</artifactId>-->
+<!--                <version>${ali.sdk.pay.version}</version>-->
+<!--            </dependency>-->
+
             <!--阿里云OSS的SDK-->
             <dependency>
                 <groupId>com.aliyun.oss</groupId>
@@ -155,7 +167,11 @@
                 <artifactId>xxl-job-core</artifactId>
                 <version>${xxl-job-version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata-version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
