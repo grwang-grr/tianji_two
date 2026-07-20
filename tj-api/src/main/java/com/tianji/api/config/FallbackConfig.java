@@ -2,9 +2,10 @@ package com.tianji.api.config;
 
 import com.tianji.api.client.learning.fallback.LearningClientFallback;
 import com.tianji.api.client.promotion.fallback.PromotionClientFallback;
-import com.tianji.api.client.remark.fallback.RemarkClientFallback;
+import com.tianji.api.client.remark.fallback.RemarkClientFallBack;
 import com.tianji.api.client.trade.fallback.TradeClientFallback;
 import com.tianji.api.client.user.fallback.UserClientFallback;
+import org.bouncycastle.cert.cmp.ProtectedPKIMessageBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,12 +27,8 @@ public class FallbackConfig {
     }
 
     @Bean
-    public RemarkClientFallback remarkClientFallback(){
-        return new RemarkClientFallback();
-    }
+    public RemarkClientFallBack remarkClientFallBack(){return  new RemarkClientFallBack();}
 
     @Bean
-    public PromotionClientFallback promotionClientFallback(){
-        return new PromotionClientFallback();
-    }
+    public PromotionClientFallback promotionClientFallback(){return  new PromotionClientFallback();}
 }

@@ -42,10 +42,13 @@ public class JwtTool {
      * @return access-token
      */
     public String createToken(LoginUserDTO userDTO) {
-        // 1.生成jws
+        // 根据记住我选择过期时长
+        Duration ttl = BooleanUtils.isTrue(userDTO.getRememberMe())?
+        JwtConstants.JWT_REMEMBER_ME_TTL : JWT_REFRESH_TTL;
+
         return JWT.create()
                 .setPayload(JwtConstants.PAYLOAD_USER_KEY, userDTO)
-                .setExpiresAt(new Date(System.currentTimeMillis() + JWT_TOKEN_TTL.toMillis()))
+                .setExpiresAt(new Date(System.currentTimeMillis() + ttl.toMillis()))
                 .setSigner(jwtSigner)
                 .sign();
     }

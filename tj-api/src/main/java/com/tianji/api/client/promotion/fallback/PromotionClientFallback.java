@@ -13,6 +13,8 @@ import java.util.List;
 
 @Slf4j
 public class PromotionClientFallback implements FallbackFactory<PromotionClient> {
+
+    //降级后返回的对象
     @Override
     public PromotionClient create(Throwable cause) {
         log.error("查询促销服务出现异常，", cause);
@@ -23,6 +25,11 @@ public class PromotionClientFallback implements FallbackFactory<PromotionClient>
             }
 
             @Override
+            public void refundCoupon(List<Long> userCouponIds) {
+                throw new BizIllegalException(500, "退还优惠券异常", cause);
+            }
+
+            @Override
             public CouponDiscountDTO queryDiscountDetailByOrder(OrderCouponDTO orderCouponDTO) {
                 return null;
             }
@@ -30,16 +37,6 @@ public class PromotionClientFallback implements FallbackFactory<PromotionClient>
             @Override
             public void writeOffCoupon(List<Long> userCouponIds) {
                 throw new BizIllegalException(500, "核销优惠券异常", cause);
-            }
-
-            @Override
-            public void refundCoupon(List<Long> userCouponIds) {
-                throw new BizIllegalException(500, "退还优惠券异常", cause);
-            }
-
-            @Override
-            public List<String> queryDiscountRules(List<Long> userCouponIds) {
-                return Collections.emptyList();
             }
         };
     }

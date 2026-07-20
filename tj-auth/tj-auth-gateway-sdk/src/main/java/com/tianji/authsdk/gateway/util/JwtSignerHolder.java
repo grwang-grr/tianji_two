@@ -15,6 +15,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Data
 @Slf4j
 public class JwtSignerHolder {
-
+    // volatile：多线程可见，网关过滤器并发读取时实时感知密钥是否加载完成
     private volatile JWTSigner jwtSigner;
 
     private DiscoveryClient discoveryClient;
@@ -45,6 +46,7 @@ public class JwtSignerHolder {
     );
 
     @PostConstruct
+    //Bean 被 Spring 实例化、依赖注入完成后自动执行；
     public void init(){
         // 尝试获取jwk秘钥
         ses.submit(new MarkedRunnable(new JwkTask(discoveryClient)));
@@ -61,6 +63,18 @@ public class JwtSignerHolder {
             e.printStackTrace();
         }
     }
+//    @PreDestroy
+//    public void destroy() {
+//        log.info("JwtSignerHolder 销毁，关闭密钥加载线程池");
+//        ses.shutdownNow();
+//        try {
+//            if (!ses.awaitTermination(5, TimeUnit.SECONDS)) {
+//                log.warn("密钥加载线程池未在5秒内终止");
+//            }
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
+//    }
     class JwkTask implements Runnable{
         private final DiscoveryClient discoveryClient;
 

@@ -15,12 +15,13 @@ public interface LearningClient {
      * @return 学习人数
      */
     @GetMapping("/lessons/{courseId}/count")
+
     Integer countLearningLessonByCourse(@PathVariable("courseId") Long courseId);
 
     /**
      * 校验当前用户是否可以学习当前课程
      * @param courseId 课程id
-     * @return true：课程有效，false：课程无效，不能学习
+     * @return lessonId，如果是报名了则返回lessonId，否则返回空
      */
     @GetMapping("/lessons/{courseId}/valid")
     Long isLessonValid(@PathVariable("courseId") Long courseId);
